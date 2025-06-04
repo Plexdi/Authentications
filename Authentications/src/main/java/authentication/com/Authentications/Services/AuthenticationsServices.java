@@ -1,7 +1,5 @@
 package authentication.com.Authentications.Services;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,8 +9,7 @@ import authentication.com.Authentications.DTO.LoginResponse;
 import authentication.com.Authentications.DTO.UserDTO;
 import authentication.com.Authentications.Interface.userInterface;
 import authentication.com.Authentications.models.UserModel;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import authentication.com.Authentications.utils.JWTUtils;
 
 @Service
 public class AuthenticationsServices {
@@ -24,6 +21,9 @@ public class AuthenticationsServices {
 
     @Value("{jwt.secret}")
     private String jwtSecret;
+
+    @Autowired
+    private JWTUtils jwtUtils; 
 
 
     public UserModel createUser(UserModel user){
@@ -41,7 +41,6 @@ public class AuthenticationsServices {
         return userInterface.save(user);
         
     }
-        // ... existing code ...
         public LoginResponse logedUser(UserModel userCredentials) { // Parameter name changed for clarity
             UserModel user = userInterface.findByUsername(userCredentials.getUsername());
             if (user == null){
@@ -53,13 +52,7 @@ public class AuthenticationsServices {
             }
     
             // Generate JWT Token (your existing logic)
-            String token = Jwts.builder()
-                    .setSubject(user.getUsername())
-                    // Add other claims as needed
-                    .setIssuedAt(new Date())
-                    .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day expiration
-                    .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                    .compact();
+            String token = jwtUtils.generateToken(user.getUsername());
     
             // Create UserDTO from UserModel
             UserDTO userDTO = new UserDTO(user.getId(), user.getUsername(), user.getEmail());

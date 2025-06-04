@@ -18,8 +18,11 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/Authentications/signup", "/api/Authentications/login").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers(
+                    "/api/Authentications/signup", 
+                    "/api/Authentications/login")
+                    .permitAll() //allow all api to be run without encountering 401 unauthenticated error
+                .anyRequest().authenticated() //any other request required to be authenticated to run 
             )
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
