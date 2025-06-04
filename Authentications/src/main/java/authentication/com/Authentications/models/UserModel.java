@@ -27,6 +27,14 @@ public class UserModel {
     @Column(name = "email", nullable = false, unique = false)
     private String email; 
 
+    public Long getId(){
+        return Id;
+    }
+
+    public void setId(Long Id){
+        this.Id = Id;
+    }
+
     public String getName(){
         return name; 
     }

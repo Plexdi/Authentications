@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import authentication.com.Authentications.DTO.LoginResponse;
 import authentication.com.Authentications.models.UserModel;
+import authentication.com.Authentications.DTO.UserDTO;
 
 @RestController
 @RequestMapping("/api/Authentications")
@@ -29,8 +31,8 @@ public class AuthenticationsControllers {
     @PostMapping("/login")
     public ResponseEntity<?> Login(@RequestBody UserModel user){
         try {
-            UserModel LoggedUser = authenticationService.logedUser(user);
-            return ResponseEntity.ok("User Logged In Successfully!");
+            LoginResponse loggedUser = authenticationService.logedUser(user);
+            return ResponseEntity.ok(loggedUser); // Return the LoginResponse object
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
