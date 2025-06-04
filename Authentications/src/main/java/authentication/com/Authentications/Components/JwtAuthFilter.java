@@ -3,6 +3,9 @@ package authentication.com.Authentications.Components;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -13,10 +16,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class JwtAuthFilter extends OncePerRequestFilter {
+public class JwtAuthFilter extends OncePerRequestFilter { //automatically called with every request that is being made 
     
     @Autowired
     private JWTUtils jwtUtils; 
+
+    @Autowired
+    private UserDetailsService userDetailsService; 
 
     @Override
     protected void doFilterInternal(
@@ -34,10 +40,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
 
             String token = authHeader.substring(7); // remove "Bearer "
-            String username = jwtUtils.extractUsername(token);
+            String username = jwtUtils.extractUsername(token); //find the user 
 
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){ //make sure that nobody is already authenticated 
+                UserDetails userDetail = userDetailsService.loadUserByUsername(username);  //load the user by username 
+                // 4. Ask JWTUtils to validate it
+                
+            }
 
-            // 4. Ask JWTUtils to validate it
             // 5. If valid → create Authentication object and set it in SecurityContext
             // 6. Then call filterChain.doFilter(request, response)
             

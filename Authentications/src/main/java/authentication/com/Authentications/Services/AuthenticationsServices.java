@@ -2,6 +2,7 @@ package authentication.com.Authentications.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +60,14 @@ public class AuthenticationsServices {
     
             // Create and return LoginResponse
         return new authentication.com.Authentications.DTO.LoginResponse(token, "User Logged in Successfully!", userDTO);
+        }
+
+        public void whoAmI(String usernameFromToken){
+            UserModel user = userInterface.findByUsername(usernameFromToken);
+
+            if (user == null){
+                throw new UsernameNotFoundException("User not found");
+            }
         }
     } 
 

@@ -31,6 +31,12 @@ public class JWTUtils {
             .parseClaimsJws(token)
             .getBody()
             .getSubject();
+    }   
+
+    public boolean validateToken(String token) {
+        try{
+
+        }
     }
     
 }
