@@ -30,7 +30,6 @@ public class AuthenticationsControllers {
         UserModel user = userInterface.findByUsername(username);
         return ResponseEntity.ok(user);
     }
-    
 
     @PostMapping("/signup")
     public ResponseEntity<?> createUser(@RequestBody UserModel user){
